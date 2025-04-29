@@ -13,7 +13,12 @@ jobs:
           aws-region: us-east-1  # Change region as needed
 
       - name: Launch EC2 Instance
-        run: aws ec2 run-instances --image-id ami-0f96c63e39f9144bc --count 1 --instance-type t2.micro --key-name MyKeyPair --security-groups default --region us-east-1 --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=MyNetworkInstance}]'
+        run: aws ec2 run-instances --image-id ami-0f96c63e39f9144bc --count 1 --instance-type t2.micro --key-name KeyPair --security-groups default --region us-east-1 --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=My3rdNetInstance}]'
 
       - name: Allow SSH Access in Security Group
-        run: aws ec2 authorize-security-group-ingress --group-id sg-0313ea41a1b2dc5ae --protocol tcp --port 22 --cidr 0.0.0.0/0
+        run: |
+             if ! aws ec2 describe-security-groups --group-ids sg-0313ea41a1b2dc5ae --query "SecurityGroups[0].IpPermissions[?ToPort==\`22\` && IpRanges[?CidrIp=='0.0.0.0/0']]" --output text | grep -q "22"; then
+             aws ec2 authorize-security-group-ingress --group-id sg-0313ea41a1b2dc5ae --protocol tcp --port 22 --cidr 0.0.0.0/0
+             else
+             echo "SSH Rule already exists. Skipping..."
+             fi
