@@ -13,7 +13,7 @@ jobs:
           aws-region: us-east-1  # Change region as needed
 
       - name: Launch EC2 Instance
-        run: aws ec2 run-instances --image-id ami-0f96c63e39f9144bc --count 1 --instance-type t2.micro --key-name MyKeyPair --security-groups default --region us-east-1 --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=MyNetworkInstance}]'
+        run: aws ec2 run-instances --image-id ami-0f96c63e39f9144bc --count 1 --instance-type t2.micro --key-name KeyPair --security-groups default --region us-east-1 --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=MyNetworkInstance}]'
 
       - name: Allow SSH Access in Security Group
         run: aws ec2 authorize-security-group-ingress --group-id sg-0313ea41a1b2dc5ae --protocol tcp --port 22 --cidr 0.0.0.0/0
